@@ -1,6 +1,6 @@
 {
   "name": "I18N",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Internationalization Server",
   "main": "./bin/test-server.js",
   "scripts": {
