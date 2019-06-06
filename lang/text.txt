@@ -1,2 +1,2 @@
-Hello!
-Your language is english!
+Buenos Dias!
+Tu idioma es español!

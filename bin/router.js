@@ -2,12 +2,21 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const itnlConfig_1 = require("./itnlConfig");
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
+const languageparse_1 = __importStar(require("./languageparse"));
+const logger_1 = require("@mazemasterjs/logger");
 exports.router = express_1.default.Router();
+const log = logger_1.Logger.getInstance();
 // load the service config
 const config = itnlConfig_1.itnlConfig.getInstance();
 // map all of the common routes
@@ -19,41 +28,26 @@ exports.router.get('/hello', (req, res) => {
 });
 //Tester page, will give you a button to make a request for the appropriate text file for the browsers lanuage
 exports.router.get('/language', (req, res) => {
-    var filename = path_1.default.resolve('./lang/langtest.html');
-    return res.sendFile(filename);
+    const lang = req.header('accept-language') + "";
+    const word = languageparse_1.fileFromLocale(lang);
+    var file = path_1.default.resolve(word);
+    return res.sendFile(file);
 });
 //Recieves the request to change the users language
 exports.router.post('/send', (req, res) => {
     var languages = JSON.stringify(req.body);
-    var mylang;
-    var infile;
-    if (languages.includes('en')) {
-        mylang = 'en';
-        infile = "./lang/" + mylang + ".txt";
-    }
-    else if (languages.includes('es')) {
-        mylang = 'es';
-        infile = "./lang/" + mylang + ".txt";
-    }
-    else {
-        mylang = 'en';
-        infile = "./lang/" + mylang + ".txt";
-    }
-    fs_1.default.copyFile(infile, './lang/text.txt', (err) => {
-        if (err)
-            throw err;
-        console.log(infile + ' was copied to text.txt');
-    });
+    log.force(__filename, 'router.post(/send): ', languages);
+    res.end(languageparse_1.default(languages));
+    var str = languageparse_1.default(languages);
+    log.force(__filename, 'router.post(/send): ', str);
     return res;
 });
 //Returns the text file
 exports.router.get('/getText', (req, res) => {
-    fs_1.default.readFile('./lang/text.txt', (err, data) => {
-        if (err)
-            throw err;
-        res.end(data);
-        res.send();
-        return res;
-    });
+    var mylang = JSON.stringify(req.body);
+    log.force(__filename, 'router.get(/getText): ', mylang);
+    var myfile = path_1.default.resolve(languageparse_1.default(mylang));
+    log.force(__filename, 'router.post(/getText): ', myfile);
+    return res.sendFile(myfile);
 });
 //# sourceMappingURL=router.js.map

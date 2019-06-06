@@ -61,20 +61,6 @@ function launchExpress() {
   // set up the base routner
   app.use(config.BASE_URL_INTL, router);
 
-  app.get('/test', (req, res) => {
-    res.status(200).json({
-      status: '200',
-      message: 'Hello!' ,
-    });
-  });
-
-  app.post('/send', (req, res) =>{
-    log.force(__filename, 'launchExpress() recieved: ', JSON.stringify(req.body));
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('This is something! Your locale is: ' + JSON.stringify(req.body));
-    res.send()
-})
-
   // catch-all for unhandled requests
   app.get('/*', (req, res) => {
     log.debug(__filename, req.url, 'Invalid Route Requested -> ' + req.url);

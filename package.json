@@ -2,7 +2,7 @@
   "name": "I18N",
   "version": "1.0.0",
   "description": "Internationalization Server",
-  "main": "./bin/test-server.js",
+  "main": "node -r dotenv/config ./bin/test-server.js",
   "scripts": {
     "start": "node -r dotenv/config ./bin/test-server.js",
     "watch": "nodemon -r dotenv/config bin/test-server.js -w bin/**/*.js",
